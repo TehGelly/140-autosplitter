@@ -54,7 +54,6 @@ split
 	{
 		return true;
 	}
-	// TODO: Return value
 }
 
 isLoading
