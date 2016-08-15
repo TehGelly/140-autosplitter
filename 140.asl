@@ -8,49 +8,66 @@ state("140")
 	int timerOne : "140.exe", 0x92C624, 0x318, 0x42C, 0x19C, 0x730, 0x64;
 }
 
-init{ vars.num = 0;
-      vars.loadEnable = false;
-      vars.splitEnable = false;
-    }
+init
+{
+	vars.num = 0;
+	vars.loadEnable = false;
+	vars.splitEnable = false;
+}
 
 start
 {
-	if(current.horizontalHub != 0){
+	if (current.horizontalHub != 0)
+	{
 		return true;
 	}
 }
 
 split
 {
-	if(vars.num==0){
-		vars.splitEnable |= (current.horizontalHub<old.horizontalHub);
-		if(current.hubtimer==3&&vars.splitEnable){
+	if (vars.num == 0)
+	{
+		vars.splitEnable |= (current.horizontalHub < old.horizontalHub);
+		if (current.hubtimer == 3 && vars.splitEnable)
+		{
 			vars.num++;
 			vars.loadEnable = true;
 			vars.splitEnable = false;
 			return true;
 		}
-	}else if(vars.num<7){
+	}
+	else if (vars.num < 7)
+	{
 		vars.splitEnable |= !current.OrbLvlOne && old.OrbLvlOne && !current.isDying;
-		if(current.timerOne%16==3 && vars.splitEnable){
+		if (current.timerOne % 16 == 3 && vars.splitEnable)
+		{
 			vars.num++;
 			vars.splitEnable = false;
 			return true;
 		}
-	}else if(vars.num==7){
-		
-	}else{
+	}
+	else if (vars.num == 7)
+	{
+		// TODO: Implement + return value
+	}
+	else
+	{
 		return true;
 	}
+	// TODO: Return value
 }
 
 isLoading
 {
-	if(vars.loadEnable){
-		if((current.verticalOne-old.verticalOne<0.4)){
+	if (vars.loadEnable)
+	{
+		if ((current.verticalOne - old.verticalOne) < 0.4)
+		{
 			return true;
-		}else{
-			vars.loadEnable = false;//
+		}
+		else
+		{
+			vars.loadEnable = false;
 			return false;
 		}
 	}
