@@ -75,7 +75,7 @@ isLoading
 {
 	if (vars.loadEnable)
 	{
-		if (Math.Round(current.verticalOne,1)==0 && old.verticalOne<-3)
+		if (current.timerOne > 0)
 		{
 			vars.loadEnable = false;
 			return false;
