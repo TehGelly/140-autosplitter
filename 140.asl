@@ -28,7 +28,7 @@ split
 	if (vars.num == 0)
 	{
 		vars.splitEnable |= (current.horizontalHub < old.horizontalHub);
-		if (current.hubtimer == 3 && vars.splitEnable)
+		if (vars.splitEnable&&current.hubtimer == 3)
 		{
 			vars.num++;
 			vars.loadEnable = true;
@@ -60,7 +60,7 @@ isLoading
 {
 	if (vars.loadEnable)
 	{
-		if ((current.verticalOne - old.verticalOne) < 0.4)
+		if ((current.verticalOne - old.verticalOne) < 0.5)
 		{
 			return true;
 		}
