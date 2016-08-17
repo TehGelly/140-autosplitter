@@ -1,6 +1,6 @@
 state("140")
 {
-	bool isDying : "140.exe", 0x9587C4, 0xA8, 0x84, 0x1A4, 0x3B8, 0x124;
+	bool isDying : "140.exe", 0x959164, 0x3A0, 0x3D8, 0x714, 0xAC, 0x12C;
 	float horizontalHub : "140.exe", 0x959164, 0x76C, 0x41C, 0x5C, 0xD0;
 
 	float verticalOne : "140.exe", 0x9590A0, 0x0, 0x614, 0x30, 0x11C, 0xD4;
@@ -42,7 +42,7 @@ split
 	else if (vars.num < 6)
 	{
 		vars.splitEnable |= !current.OrbLvlOne && old.OrbLvlOne && !current.isDying;
-		if (vars.splitEnable && current.timerOne % 16 == 3)
+		if (vars.splitEnable && current.timerOne % 4 == 3)
 		{
 			vars.num++;
 			vars.splitEnable = false;
