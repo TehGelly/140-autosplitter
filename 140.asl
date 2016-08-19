@@ -6,11 +6,10 @@ state("140")
 	float verticalOne : "140.exe", 0x9590A0, 0x0, 0x614, 0x30, 0x11C, 0xD4;
 
 	int hubtimer : "140.exe", 0x959160, 0x120, 0x29C, 0x308, 0x468, 0xF8;
-	int timerOne : "140.exe", 0x92C624, 0x318, 0x42C, 0x19C, 0x730, 0x64;
-
-	bool OrbLvlOne : "140.exe", 0x92C624, 0x7FC, 0x1C4, 0x768, 0x80, 0x15C;
+	int timerOne : "140.exe", 0x30474, 0x5B4, 0x2AC, 0x2C, 0x10, 0x29C;
 	
-	int huborb2 : "140.exe", 0x92C624, 0x9C, 0x14, 0x10, 0x188, 0x10;
+	int orb : "140.exe", 0x92C624, 0x9C, 0x14, 0x10, 0x188, 0x10;
+	int timerTwo : "140.exe", 0x92D420, 0x5AC, 0x18, 0x1F4, 0x4F8, 0xC;
 }
 
 init
@@ -18,6 +17,7 @@ init
 	vars.num = 0;
 	vars.loadEnable = false;
 	vars.splitEnable = false;
+	refreshRate = 120;
 }
 
 start
@@ -32,7 +32,7 @@ split
 {
 	if (vars.num == 0)
 	{
-		vars.splitEnable |= (current.horizontalHub < old.horizontalHub);
+		vars.splitEnable |= (current.horizontalHub<old.horizontalHub);
 		if (vars.splitEnable && current.hubtimer == 3)
 		{
 			vars.num++;
@@ -43,8 +43,8 @@ split
 	}
 	else if (vars.num < 6)
 	{
-		vars.splitEnable |= !current.OrbLvlOne && old.OrbLvlOne && !current.isDying;
-		if (vars.splitEnable && current.timerOne % 4 == 3)
+		vars.splitEnable |= current.orb == 0 && old.orb !=0 && !current.isDying;
+		if (vars.splitEnable && current.timerOne % 8 == 3)
 		{
 			vars.num++;
 			vars.splitEnable = false;
@@ -53,8 +53,8 @@ split
 	}
 	else if (vars.num == 6)
 	{
-		vars.splitEnable |= huborb2 == 0;
-		if(vars.splitEnable && current.timerOne % 8 == 7)
+		vars.splitEnable |= (current.orb == 0 && old.orb != 0);
+		if(vars.splitEnable && current.timerOne % 8 == 3)
 		{
 			vars.num++;
 			vars.splitEnable = false;
@@ -64,7 +64,13 @@ split
 	}
 	else if (vars.num < 11)
 	{
-
+		vars.splitEnable |= current.orb == 0 && old.orb !=0 && !current.isDying;
+		if (vars.splitEnable && current.timerTwo % 8 == 3)
+		{
+			vars.num++;
+			vars.splitEnable = false;
+			return true;
+		}
 	}
 	else if (vars.num == 11)
 	{
