@@ -9,6 +9,8 @@ state("140")
 	int timerOne : "140.exe", 0x92C624, 0x318, 0x42C, 0x19C, 0x730, 0x64;
 
 	bool OrbLvlOne : "140.exe", 0x92C624, 0x7FC, 0x1C4, 0x768, 0x80, 0x15C;
+	
+	int huborb2 : "140.exe", 0x92C624, 0x9C, 0x14, 0x10, 0x188, 0x10;
 }
 
 init
@@ -51,7 +53,14 @@ split
 	}
 	else if (vars.num == 6)
 	{
-		// TODO: Implement + return value
+		vars.splitEnable |= huborb2 == 0;
+		if(vars.splitEnable && current.timerOne % 8 == 7)
+		{
+			vars.num++;
+			vars.splitEnable = false;
+			vars.loadEnable = true;
+			return true;
+		}
 	}
 	else if (vars.num < 11)
 	{
