@@ -6,7 +6,7 @@ state("140")
 	float verticalOne : "140.exe", 0x9590A0, 0x0, 0x614, 0x30, 0x11C, 0xD4;
 
 	int hubtimer : "140.exe", 0x959160, 0x120, 0x29C, 0x308, 0x468, 0xF8;
-	int timerOne : "140.exe", 0x30474, 0x5B4, 0x2AC, 0x2C, 0x10, 0x29C;
+	int timerOne : "140.exe", 0x92C624, 0x360, 0x670, 0x4BC, 0x16C, 0x2C;
 	
 	int orb : "140.exe", 0x92C624, 0x9C, 0x14, 0x10, 0x188, 0x10;
 	int timerTwo : "140.exe", 0x92D420, 0x5AC, 0x18, 0x1F4, 0x4F8, 0xC;
@@ -53,7 +53,7 @@ split
 	}
 	else if (vars.num == 6)
 	{
-		vars.splitEnable |= (current.orb == 0 && old.orb != 0);
+		vars.splitEnable |= (current.timerOne = 0xFFFFFFFF);
 		if(vars.splitEnable && current.timerOne % 8 == 3)
 		{
 			vars.num++;
@@ -90,7 +90,8 @@ isLoading
 {
 	if (vars.loadEnable)
 	{
-		if (current.timerOne > 0)
+		if ((current.timerOne > 0 && vars.num == 1)||
+			(current.timerTwo > 0 && vars.num == 7))
 		{
 			vars.loadEnable = false;
 			return false;
