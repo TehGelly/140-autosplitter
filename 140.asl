@@ -9,6 +9,7 @@ state("140")
 	int timerOne : "140.exe", 0x92C624, 0x360, 0x670, 0x4BC, 0x16C, 0x2C;
 	
 	int orb : "140.exe", 0x92C624, 0x9C, 0x14, 0x10, 0x188, 0x10;
+	bool orb2 : "140.exe", 0x95915C, 0x778, 0x4DC, 0x214, 0x84, 0x6C;
 	int timerTwo : "140.exe", 0x93318C, 0x4C, 0x14, 0x220, 0x2D0, 0x1CC;
 }
 
@@ -63,7 +64,7 @@ split
 	}
 	else if (vars.num < 11)
 	{
-		vars.splitEnable |= current.orb == 0 && old.orb !=0 && !current.isDying;
+		vars.splitEnable |= old.orb && !current.orb && !current.isDying;
 		if (vars.splitEnable && current.timerTwo % 8 == 3)
 		{
 			vars.num++;
