@@ -34,7 +34,7 @@ split
 	if (vars.num == 0)
 	{
 		vars.splitEnable |= (current.horizontalHub<old.horizontalHub);
-		if (vars.splitEnable && current.timer == 8)
+		if (vars.splitEnable && current.timer == 3)
 		{
 			vars.num++;
 			vars.loadEnable = true;
