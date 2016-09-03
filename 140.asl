@@ -6,10 +6,11 @@ state("140")
 	// velocities
 	float horizontalHub : "140.exe", 0x959164, 0x76C, 0x41C, 0x5C, 0xD0;
 	float verticalOne : "140.exe", 0x9590A0, 0x0, 0x614, 0x30, 0x11C, 0xD4;
+	float verticalTwo : "140.exe", 0x959164, 0x560, 0x4FC, 0x688, 0x3C8, 0x2E0;
 
 	// timers
 	int hubtimer : "140.exe", 0x959160, 0x120, 0x29C, 0x308, 0x468, 0xF8;
-	int timerTwo : "140.exe", 0x95C7D4, 0x328, 0x740, 0x130, 0x4F8, 0xC;
+	int timerTwo : "140.exe", 0x960A1C, 0x494, 0x5B0, 0x130, 0x4F8, 0xC;
 	int timerOne : "140.exe", 0x92C624, 0x360, 0x670, 0x4BC, 0x16C, 0x2C;
 	
 	// orbs
@@ -57,9 +58,19 @@ split
 			return true;
 		}
 	}
+	else if (vars.num == 6)
+	{
+		vars.splitEnable |= !current.orb && old.orb && !current.isDying;
+		if (vars.splitEnable && current.timerTwo%8 == 3)
+		{
+			vars.num++;
+			vars.splitEnable = false;
+			return true;
+		}
+	}
 	else if (vars.num < 11)
 	{
-		vars.splitEnable |= old.orb && !current.orb && !current.isDying;
+		vars.splitEnable |= old.orb2 && !current.orb2 && !current.isDying;
 		if (vars.splitEnable && current.timerTwo == 8)
 		{
 			vars.num++;
@@ -85,12 +96,12 @@ isLoading
 {
 	if (vars.loadEnable)
 	{
-		if (current.timerOne == 1 && vars.num == 1)
+		if (vars.num == 1 && current.timerOne == 1)
 		{
 			vars.loadEnable = false;
 			return false;
 		}
-		else if(current.timerOne > 1 && vars.num == 7)
+		else if(vars.num == 7 && current.verticalTwo > -2 && old.verticalTwo < -4)
 		{
 			vars.loadEnable = false;
 			return false;
