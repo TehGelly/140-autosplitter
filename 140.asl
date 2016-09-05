@@ -7,15 +7,16 @@ state("140")
 	float horizontalHub : "140.exe", 0x959164, 0x76C, 0x41C, 0x5C, 0xD0;
 	float verticalOne : "140.exe", 0x9590A0, 0x0, 0x614, 0x30, 0x11C, 0xD4;
 	float verticalTwo : "140.exe", 0x92C624, 0x38, 0x278, 0xE8, 0x270, 0xD4;
+	float verticalThree : "140.exe", 0x95A614, 0x3DC, 0xC0, 0x254, 0x1C8, 0xD4;
 
 	// timers
-	int hubtimer : "140.exe", 0x959160, 0x120, 0x29C, 0x308, 0x468, 0xF8;
-	int timerTwo : "140.exe", 0x69F474, 0x128, 0x18, 0x1F4, 0x4F8, 0xC;
+	int timer : "140.exe", 0x95A74C;
 	int timerOne : "140.exe", 0x92C624, 0x360, 0x670, 0x4BC, 0x16C, 0x2C;
 	
 	// orbs
 	bool orb : "140.exe", 0x959104, 0x54, 0x30, 0x70, 0x14, 0x6C;
 	bool orb2 : "140.exe", 0x95915C, 0x778, 0x4DC, 0x214, 0x84, 0x6C;
+	bool orb3 : "140.exe", 0x103DD0, 0x5C4, 0x48, 0x22C, 0x14, 0x6C;
 
 }
 
@@ -37,58 +38,34 @@ start
 
 split
 {
-	if (vars.num == 0)
-	{
-		vars.splitEnable |= !current.orb && old.orb;
-		if (vars.splitEnable && current.hubtimer == 3)
-		{
-			vars.num++;
-			vars.loadEnable = true;
-			vars.splitEnable = false;
-			return true;
-		}
-	}
-	else if (vars.num < 6)
-	{
-		vars.splitEnable |= !current.orb && old.orb && !current.isDying;
-		if (vars.splitEnable && current.timerOne%8 == 3)
-		{
-			vars.num++;
-			vars.splitEnable = false;
-			return true;
-		}
-	}
-	else if (vars.num == 6)
-	{
-		vars.splitEnable |= !current.orb && old.orb && !current.isDying;
-		if (vars.splitEnable && current.timerTwo%8 == 3)
-		{
-			vars.num++;
-			vars.splitEnable = false;
-			return true;
-		}
-	}
-	else if (vars.num < 11)
-	{
-		vars.splitEnable |= old.orb2 && !current.orb2 && !current.isDying;
-		if (vars.splitEnable && current.timerTwo == 8)
-		{
-			vars.num++;
-			vars.splitEnable = false;
-			return true;
-		}
-	}
-	else if (vars.num == 11)
-	{
 
-	}
-	else if (vars.num < 16)
+	if (current.isDying)
 	{
-
+		vars.splitEnable = false;
+	}
+	else if(vars.num<7)
+	{
+		vars.splitEnable |= old.orb && !current.orb;
+	}
+	else if(vars.num < 12)
+	{
+		vars.splitEnable |= old.orb2 && !current.orb2;
+	}
+	else if(vars.num < 16)
+	{
+		vars.splitEnable |= old.orb3 && !current.orb3;
 	}
 	else
 	{
-		// TODO : Boss split
+		//TODO : Boss Split
+	}
+
+	if (vars.splitEnable && current.timer%8 == 2)
+	{
+		vars.num++;
+		vars.splitEnable = false;
+		vars.loadEnable = (vars.num == 1) || (vars.num==7) || (vars.num==12);
+		return true;
 	}
 }
 
@@ -102,6 +79,11 @@ isLoading
 			return false;
 		}
 		else if(vars.num == 7 && current.verticalTwo > -2 && old.verticalTwo < -4)
+		{
+			vars.loadEnable = false;
+			return false;
+		}
+		else if(vars.num == 12 && current.verticalThree > -2 && old.verticalThree < -4)
 		{
 			vars.loadEnable = false;
 			return false;
