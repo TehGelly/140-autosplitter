@@ -11,12 +11,14 @@ state("140")
 
 	// timers
 	int timer : "140.exe", 0x95A74C;
-	int timerOne : "140.exe", 0x92C624, 0x360, 0x670, 0x4BC, 0x16C, 0x2C;
 	
 	// orbs
 	bool orb : "140.exe", 0x959104, 0x54, 0x30, 0x70, 0x14, 0x6C;
-	bool orb2 : "140.exe", 0x95915C, 0x778, 0x4DC, 0x214, 0x84, 0x6C;
-	bool orb3 : "140.exe", 0x103DD0, 0x5C4, 0x48, 0x22C, 0x14, 0x6C;
+	bool orb2 : "140.exe", 0x95915C, 0x770, 0x324, 0x620, 0x10, 0x54;
+	bool orb3 : "140.exe", 0x95915C, 0x230, 0x744, 0x620, 0x5C, 0x3C;
+
+	// boss var
+	int bossStage : "140.exe", 0x95915C, 0x5F8, 0x4CC, 0x5D4, 0x218, 0x24C; 
 
 }
 
@@ -25,6 +27,8 @@ init
 	vars.num = 0;
 	vars.loadEnable = false;
 	vars.splitEnable = false;
+	vars.bossSplitEnable = false;
+	vars.goopybutts = 0;
 	refreshRate = 120;
 }
 
@@ -57,7 +61,16 @@ split
 	}
 	else
 	{
-		//TODO : Boss Split
+		if(old.bossStage == 8 && current.bossStage == 0)
+		{
+			vars.goopybutts++;
+			vars.bossSplitEnable = vars.goopybutts >= 2;
+		}
+
+		if(vars.bossSplitEnable && current.bossStage == 8)
+		{
+			return true;
+		}
 	}
 
 	if (vars.splitEnable && current.timer%8 == 2)
@@ -73,7 +86,7 @@ isLoading
 {
 	if (vars.loadEnable)
 	{
-		if (vars.num == 1 && current.timerOne == 1)
+		if (vars.num == 1 && current.verticalOne > -2 && old.verticalOne < -4)
 		{
 			vars.loadEnable = false;
 			return false;
