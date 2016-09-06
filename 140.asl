@@ -29,6 +29,7 @@ init
 	vars.splitEnable = false;
 	vars.bossSplitEnable = false;
 	vars.goopybutts = 0;
+	vars.wait = 0;
 	refreshRate = 120;
 }
 
@@ -69,7 +70,11 @@ split
 
 		if(vars.bossSplitEnable && current.bossStage == 8)
 		{
-			return true;
+			vars.wait++;
+			if(vars.wait == 204)
+			{
+				return true;
+			}
 		}
 	}
 
