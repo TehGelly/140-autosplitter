@@ -14,7 +14,7 @@ state("140")
 	
 	// orbs
 	bool orb : "140.exe", 0x959104, 0x54, 0x30, 0x70, 0x14, 0x6C;
-	bool orb2 : "140.exe", 0x95911C, 0x34, 0x3DC, 0x8, 0x14, 0x6C;
+	bool orb2 : "140.exe", 0x95915C, 0x770, 0x324, 0x620, 0x54, 0xC;
 	bool orb3 : "140.exe", 0x95915C, 0x230, 0x744, 0x620, 0x5C, 0x3C;
 
 	// boss var
@@ -24,13 +24,19 @@ state("140")
 
 init
 {
+	//changing variables
 	vars.num = 0;
 	vars.loadEnable = false;
 	vars.splitEnable = false;
 	vars.bossSplitEnable = false;
 	vars.goopybutts = 0;
 	vars.wait = 0;
+
+
+	//const
 	refreshRate = 120;
+	vars.CYCLE = 16;
+	vars.PLACE = 15;
 }
 
 start
@@ -78,7 +84,7 @@ split
 		}
 	}
 
-	if (vars.splitEnable && current.timer%8 == 2)
+	if (vars.splitEnable && current.timer%vars.CYCLE == vars.PLACE)
 	{
 		vars.num++;
 		vars.splitEnable = false;
