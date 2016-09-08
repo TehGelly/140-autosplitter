@@ -50,11 +50,7 @@ start
 split
 {
 
-	if (current.isDying&&old.isDying)
-	{
-		vars.splitEnable = false;
-	}
-	else if(vars.num<7)
+	if(vars.num<7)
 	{
 		vars.splitEnable |= old.orb && !current.orb;
 	}
