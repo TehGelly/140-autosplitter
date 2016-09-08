@@ -1,7 +1,9 @@
 state("140")
 {
-	// global variables
-	bool isDying : "140.exe", 0x959164, 0x3A0, 0x3D8, 0x714, 0xAC, 0x12C;
+	// death variables
+	bool isDyingOne : "140.exe", 0x959164, 0x3A0, 0x3D8, 0x714, 0xAC, 0x12C;
+	bool isDyingTwo : "140.exe", 0x959164, 0x4FC, 0x5B0, 0x574, 0x30, 0xC0;
+	bool isDyingThree : "140.exe", 0x959164, 0x7AC, 0x720, 0x304, 0x7D4, 0xC0;
 
 	// velocities
 	float horizontalHub : "140.exe", 0x959164, 0x76C, 0x41C, 0x5C, 0xD0;
@@ -52,15 +54,18 @@ split
 
 	if(vars.num<7)
 	{
-		vars.splitEnable |= old.orb && !current.orb;
+		vars.splitEnable |= old.orb && !current.orb && 
+			((vars.num==6||vars.num==0)?true:!(current.isDyingOne||old.isDyingOne));
 	}
 	else if(vars.num < 12)
 	{
-		vars.splitEnable |= old.orb2 && !current.orb2;
+		vars.splitEnable |= old.orb2 && !current.orb2 && 
+			((vars.num==11)?true:!(current.isDyingTwo||old.isDyingTwo));
 	}
 	else if(vars.num < 16)
 	{
-		vars.splitEnable |= old.orb3 && !current.orb3;
+		vars.splitEnable |= old.orb3 && !current.orb3 && 
+			!(current.isDyingThree||old.isDyingThree);
 	}
 	else
 	{
