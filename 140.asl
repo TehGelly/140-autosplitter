@@ -1,7 +1,7 @@
 state("140")
 {
 	// death variables
-	bool isDyingOne : "140.exe", 0x959164, 0x3A0, 0x3D8, 0x714, 0xAC, 0x12C;
+	bool isDyingOne : "140.exe", 0x959164, 0x24C, 0x3B8, 0x7C8, 0x67C, 0xC0;
 	bool isDyingTwo : "140.exe", 0x959164, 0x4FC, 0x5B0, 0x574, 0x30, 0xC0;
 	bool isDyingThree : "140.exe", 0x959164, 0x7AC, 0x720, 0x304, 0x7D4, 0xC0;
 
@@ -78,7 +78,7 @@ split
 		if(vars.bossSplitEnable && current.bossStage == 8)
 		{
 			vars.wait++;
-			if(vars.wait == 170)
+			if(vars.wait == 139)
 			{
 				return true;
 			}
