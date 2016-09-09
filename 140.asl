@@ -78,7 +78,7 @@ split
 		if(vars.bossSplitEnable && current.bossStage == 8)
 		{
 			vars.wait++;
-			if(vars.wait == 139)
+			if(vars.wait == 145)
 			{
 				return true;
 			}
