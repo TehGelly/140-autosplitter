@@ -74,7 +74,7 @@ split
 		}
 	}
 
-	if (vars.splitEnable && vars.wait==10)
+	if (vars.splitEnable && vars.wait==20)
 	{
 		vars.num++;
 		vars.wait = 0;
