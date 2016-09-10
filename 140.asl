@@ -20,7 +20,7 @@ state("140")
 	bool orb3 : "140.exe", 0x95915C, 0x230, 0x744, 0x620, 0x5C, 0x3C;
 
 	// boss var
-	int bossStage : "140.exe", 0x95915C, 0x5F8, 0x4CC, 0x5D4, 0x218, 0x24C; 
+	bool bossChord : "140.exe", 0x95915C, 0x7BC, 0x54C, 0x5E8, 0x518, 0xE4;
 
 }
 
@@ -69,19 +69,8 @@ split
 	}
 	else
 	{
-		if(old.bossStage == 8 && current.bossStage == 0)
-		{
-			vars.goopybutts++;
-			vars.bossSplitEnable = vars.goopybutts >= 2;
-		}
-
-		if(vars.bossSplitEnable && current.bossStage == 8)
-		{
-			vars.wait++;
-			if(vars.wait == 145)
-			{
-				return true;
-			}
+		if(!old.bossChord && current.bossChord){
+			return true;
 		}
 	}
 
