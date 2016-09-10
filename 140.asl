@@ -85,12 +85,17 @@ split
 		}
 	}
 
-	if (vars.splitEnable && current.timer%vars.CYCLE == vars.PLACE)
+	if (vars.splitEnable && vars.wait==10)
 	{
 		vars.num++;
+		vars.wait = 0;
 		vars.splitEnable = false;
 		vars.loadEnable = (vars.num == 1) || (vars.num==7) || (vars.num==12);
 		return true;
+	}
+	else if(vars.splitEnable){
+	{
+		vars.wait++;
 	}
 }
 
