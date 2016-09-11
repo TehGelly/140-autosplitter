@@ -52,9 +52,9 @@ split
 
 // Boss splits and/or checking if to start the split
 
-	if(vars.num < 6 || vars.num == 7)
+	if(vars.num < 6)
 	{
-		// hub-1 to 1-5 & hub-2
+		// hub-1 to 1-5
 		vars.splitEnable |= old.orb && !current.orb && 
 			!(current.isDyingOne||old.isDyingOne);
 	}
@@ -67,9 +67,14 @@ split
 			return true;
 		}
 	}
-	else if(vars.num < 12 || vars.num == 13)
+	else if(vars.num == 7)
 	{
-	// 2-1 to 2-4  & hub-3
+	// hub-2
+		vars.splitEnable |= old.orb && !current.orb;
+	}
+	else if(vars.num < 12)
+	{
+	// 2-1 to 2-4
 		vars.splitEnable |= old.orb2 && !current.orb2 && 
 			!(current.isDyingTwo||old.isDyingTwo);
 	}
@@ -81,6 +86,11 @@ split
 			vars.num++;
 			return true;
 		}
+	}
+	else if(vars.num == 13)
+	{
+	// hub-3
+		vars.splitEnable |= old.orb2 && !current.orb2;
 	}
 	else if(vars.num < 18)
 	{
@@ -119,7 +129,7 @@ isLoading
 	if (vars.loadEnable)
 	{
 	//picks the old and current vertical values
-		vars.cvert = (vars.num==1)?(current.vOne):((vars.num==8)?(current.veTwo):(current.vThree));
+		vars.cvert = (vars.num==1)?(current.vOne):((vars.num==8)?(current.vTwo):(current.vThree));
 		vars.overt = (vars.num==1)?(old.vOne):((vars.num==8)?(old.vTwo):(old.vThree));
 
 	// if the char comes to a sudden stop
