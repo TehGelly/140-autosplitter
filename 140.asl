@@ -7,13 +7,10 @@ state("140")
 
 	// velocities
 	float horizontalHub : "140.exe", 0x959164, 0x76C, 0x41C, 0x5C, 0xD0;
-	float verticalOne : "140.exe", 0x95915C, 0xA4, 0x2F8, 0x620, 0x38, 0xD4;
-	float verticalTwo : "140.exe", 0x95915C, 0x13C, 0x98, 0x2CC, 0x41C, 0xD4;
-	float verticalThree : "140.exe", 0x95915C, 0x230, 0x744, 0x504, 0x1C8, 0xD4;
+	float vOne : "140.exe", 0x95915C, 0xA4, 0x2F8, 0x620, 0x38, 0xD4;
+	float vTwo : "140.exe", 0x95915C, 0x13C, 0x98, 0x2CC, 0x41C, 0xD4;
+	float vThree : "140.exe", 0x95915C, 0x230, 0x744, 0x504, 0x1C8, 0xD4;
 
-	// timers
-	int timer : "140.exe", 0x95A74C;
-	
 	// orbs
 	bool orb : "140.exe", 0x959104, 0x54, 0x30, 0x70, 0x14, 0x6C;
 	bool orb2 : "140.exe", 0x95915C, 0x770, 0x324, 0x620, 0x54, 0xC;
@@ -27,16 +24,18 @@ state("140")
 
 init
 {
-	//changing variables
+	// number of splits
 	vars.num = 0;
+
+	//enabling load on time
 	vars.loadEnable = false;
+
+	//enabling split on time
 	vars.splitEnable = false;
-	vars.bossSplitEnable = false;
-	vars.goopybutts = 0;
+
+	//for waiting frames
 	vars.wait = 0;
 
-
-	//const
 	refreshRate = 120;
 }
 
@@ -51,15 +50,17 @@ start
 split
 {
 
+// Boss splits and/or checking if to start the split
+
 	if(vars.num < 6 || vars.num == 7)
 	{
 		// hub-1 to 1-5 & hub-2
 		vars.splitEnable |= old.orb && !current.orb && 
-			((vars.num==6||vars.num==0)?true:!(current.isDyingOne||old.isDyingOne));
+			!(current.isDyingOne||old.isDyingOne);
 	}
 	else if(vars.num == 6)
 	{
-		// boss-1
+	// boss-1
 		if(current.bossOne == 8)
 		{
 			vars.num++;
@@ -68,14 +69,14 @@ split
 	}
 	else if(vars.num < 12 || vars.num == 13)
 	{
-		// 2-1 to 2-4  & hub-3
+	// 2-1 to 2-4  & hub-3
 		vars.splitEnable |= old.orb2 && !current.orb2 && 
-			((vars.num==11)?true:!(current.isDyingTwo||old.isDyingTwo));
+			!(current.isDyingTwo||old.isDyingTwo);
 	}
 	else if(vars.num == 12)
 	{
-		//boss 2
-		if(old.verticalTwo == 18 && current.verticalTwo < 18)
+	//boss 2
+		if(old.vTwo == 18 && current.vTwo < 18)
 		{
 			vars.num++;
 			return true;
@@ -83,18 +84,20 @@ split
 	}
 	else if(vars.num < 18)
 	{
-		//3-1 to 3-4
+	//3-1 to 3-4
 		vars.splitEnable |= old.orb3 && !current.orb3 && 
 			!(current.isDyingThree||old.isDyingThree);
 	}
 	else
 	{
-		// boss-3
+	// boss-3
 		if(current.bossChord)
 		{
 			return true;
 		}
 	}
+
+// Delaying by 10 frames if needed, allowing load enables and resetting variables
 
 	if (vars.splitEnable && vars.wait==20)
 	{
@@ -111,22 +114,16 @@ split
 	}
 }
 
-
 isLoading
 {
 	if (vars.loadEnable)
 	{
-		if (vars.num == 1 && current.verticalOne > -2 && old.verticalOne < -4)
-		{
-			vars.loadEnable = false;
-			return false;
-		}
-		else if(vars.num == 8 && current.verticalTwo > -2 && old.verticalTwo < -4)
-		{
-			vars.loadEnable = false;
-			return false;
-		}
-		else if(vars.num == 14 && current.verticalThree > -2 && old.verticalThree < -4)
+	//picks the old and current vertical values
+		vars.cvert = (vars.num==1)?(current.vOne):((vars.num==8)?(current.veTwo):(current.vThree));
+		vars.overt = (vars.num==1)?(old.vOne):((vars.num==8)?(old.vTwo):(old.vThree));
+
+	// if the char comes to a sudden stop
+		if (vars.cvert > -2 && vars.overt < -4)
 		{
 			vars.loadEnable = false;
 			return false;
@@ -136,6 +133,4 @@ isLoading
 			return true;
 		}
 	}
-
-	// TODO: Loadless for more levels
 }
