@@ -20,6 +20,8 @@ state("140")
 	int bossOne : "140.exe", 0x95915C, 0x13C, 0x214, 0x5C8, 0xC0, 0x24;
 	bool bossChord : "140.exe", 0x95915C, 0x7BC, 0x54C, 0x5E8, 0x518, 0xE4;
 
+	// reset var
+	float reset : "140.exe", 0x959134, 0x61C, 0x48, 0x71C, 0x114, 0x38;
 }
 
 init
@@ -121,6 +123,14 @@ split
 	else if(vars.splitEnable)
 	{
 		vars.wait++;
+	}
+}
+
+reset
+{
+	if(Math.Round(current.reset,1)==1)
+	{
+		return true;
 	}
 }
 
