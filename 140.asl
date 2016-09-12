@@ -26,18 +26,32 @@ state("140")
 
 init
 {
-	// number of splits
+	/* 			FOR CUSTOMIZATION
+		Hey there, stranger! Below are some true/falses for splitting.
+		Don't touch anything else unless you want a good h'whapping.
+	*/
+
+	// If you don't want boss splits, change the below to false.
+
+	vars.BOSS_SPLITS = true;
+
+	// If you don't want splits within levels, change the below to false.
+
+	vars.ORB_SPLITS = true;
+
+	// If the only thing you want is start, stop, and loadless, change this and previous to false.
+
+	vars.LEVEL_SPLITS = true;
+	
+	/*			NOT FOR CUSTOMIZATION
+		I mean it this time, don't touch anything below this line!
+	-----------------------------------------------------------------------------------------------------
+	*/
+
 	vars.num = 0;
-
-	//enabling load on time
 	vars.loadEnable = false;
-
-	//enabling split on time
 	vars.splitEnable = false;
-
-	//for waiting frames
 	vars.wait = 0;
-
 	refreshRate = 120;
 }
 
@@ -66,7 +80,10 @@ split
 		if(current.bossOne == 8)
 		{
 			vars.num++;
-			return true;
+			if(vars.BOSS_SPLITS)
+			{
+				return true;
+			}
 		}
 	}
 	else if(vars.num == 7)
@@ -86,7 +103,10 @@ split
 		if(old.vTwo == 18 && current.vTwo < 18)
 		{
 			vars.num++;
+			if(vars.BOSS_SPLITS)
+			{
 			return true;
+			}
 		}
 	}
 	else if(vars.num == 13)
@@ -118,7 +138,10 @@ split
 		vars.wait = 0;
 		vars.splitEnable = false;
 		vars.loadEnable = (vars.num == 1) || (vars.num==8) || (vars.num==14);
+		if((!vars.loadEnable && vars.ORB_SPLITS) || (vars.loadEnable && vars.LEVEL_SPLITS))
+		{
 		return true;
+		}
 	}
 	else if(vars.splitEnable)
 	{
