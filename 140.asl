@@ -74,6 +74,7 @@ split
 	else if (vars.currentKeyUsed != null && vars.currentKeyUsed.Current && current.keyCount == 0)
 	{
 		vars.currentKeyUsed = null;
+		vars.loadEnable = (vars.num==1)||(vars.num==8)||(vars.num==14);
 		return true;
 	}
 }
