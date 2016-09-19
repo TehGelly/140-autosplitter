@@ -9,14 +9,13 @@ state("140")
 
 	int bossOne : "140.exe", 0x95915C, 0x13C, 0x214, 0x5C8, 0xC0, 0x24;
 	bool bossChord : "140.exe", 0x95915C, 0x7BC, 0x54C, 0x5E8, 0x518, 0xE4;
-
-	float exit : "mono.dll", 0x1F34F8, 0x8, 0x198, 0xC4, 0x6D8;
 }
 
 startup
 {
 	// not in state because we don't need to read this often
 	vars.currentKeyPtr = new DeepPointer(0x95A788, 0x30, 0x98, 0x8, 0x14, 0x54, 0x8, 0x10);
+	vars.timer = new TimerModel { CurrentState = timer };
 }
 
 init
@@ -83,13 +82,6 @@ split
 	}
 }
 
-reset
-{
-	if(Math.Round(current.exit,1) >= 0.9)
-	{
-		return true;
-	}
-}
 isLoading
 {
 	if (vars.loadEnable)
@@ -109,4 +101,9 @@ isLoading
 			return true;
 		}
 	}
+}
+
+exit
+{
+    vars.timer.Reset(); //reset on game exit
 }
