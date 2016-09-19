@@ -1,6 +1,7 @@
 state("140")
 {
 	int keyCount : 0x95A788, 0x30, 0x98, 0x8, 0x14, 0x54, 0xc;
+	uint keyPtr : 0x95A788, 0x30, 0x98, 0x8, 0x14, 0x54, 0x8, 0x10;
 
 	float horizontalHub : "140.exe", 0x959164, 0x76C, 0x41C, 0x5C, 0xD0;
 	float vOne : "140.exe", 0x95915C, 0xA4, 0x2F8, 0x620, 0x38, 0xD4;
@@ -13,8 +14,6 @@ state("140")
 
 startup
 {
-	// not in state because we don't need to read this often
-	vars.currentKeyPtr = new DeepPointer(0x95A788, 0x30, 0x98, 0x8, 0x14, 0x54, 0x8, 0x10);
 	vars.timer = new TimerModel { CurrentState = timer };
 }
 
@@ -27,10 +26,10 @@ init
 
 update
 {
-	if (current.keyCount == 1 && (old.keyCount == 0 || vars.currentKeyUsed == null))
+	if (current.keyCount > 0 && current.keyPtr != 0
+		&& (current.keyPtr != old.keyPtr || vars.currentKeyUsed == null))
 	{
-		var keyAddr = (IntPtr)vars.currentKeyPtr.Deref<uint>(game);
-		var keyUsedAddr = IntPtr.Add(keyAddr, 0xC5); // Key:colorSphereHasBeenOpened
+		var keyUsedAddr = IntPtr.Add((IntPtr)current.keyPtr, 0xC5); // Key:colorSphereHasBeenOpened
 		vars.currentKeyUsed = new MemoryWatcher<bool>(keyUsedAddr);
 	}
 
@@ -75,9 +74,6 @@ split
 	else if (vars.currentKeyUsed != null && vars.currentKeyUsed.Current && current.keyCount == 0)
 	{
 		vars.currentKeyUsed = null;
-		vars.num++;	
-		print(vars.num.ToString());
-		vars.loadEnable = (vars.num == 1) || (vars.num==8) || (vars.num==14);
 		return true;
 	}
 }
