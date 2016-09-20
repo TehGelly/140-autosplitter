@@ -29,6 +29,7 @@ update
 	{
 		var keyUsedAddr = IntPtr.Add((IntPtr)current.keyPtr, 0xC5); // Key:colorSphereHasBeenOpened
 		vars.currentKeyUsed = new MemoryWatcher<bool>(keyUsedAddr);
+		print("Updated key address to " + current.keyPtr.ToString("X"));
 	}
 
 	if (vars.currentKeyUsed != null)
@@ -84,7 +85,7 @@ isLoading
 	{
 
 	// if the char comes to a sudden stop
-		if (current.movementDirectionY > -2 && old.movementDirectionY < -4)
+		if (current.movementDirectionY == 0 && old.movementDirectionY < 0)
 		{
 			vars.loadEnable = false;
 			return false;
