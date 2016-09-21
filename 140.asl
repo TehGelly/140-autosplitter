@@ -3,16 +3,11 @@ state("140")
 	int keyCount : 0x95A788, 0x30, 0x98, 0x8, 0x14, 0x54, 0xc;
 	uint keyPtr : 0x95A788, 0x30, 0x98, 0x8, 0x14, 0x54, 0x8, 0x10;
 
-	float horizontalHub : "140.exe", 0x959164, 0x76C, 0x41C, 0x5C, 0xD0;
+	float movementDirectionX : 0x95A788, 0x30, 0x98, 0x8, 0x14, 0xD0;
 	float movementDirectionY : 0x95A788, 0x30, 0x98, 0x8, 0x14, 0xD4;
 
 	int bossOne : 0x95915C, 0x13C, 0x214, 0x5C8, 0xC0, 0x24;
 	bool bossChord : 0x95915C, 0x7BC, 0x54C, 0x5E8, 0x518, 0xE4;
-}
-
-startup
-{
-	vars.timer = new TimerModel { CurrentState = timer };
 }
 
 init
@@ -20,6 +15,17 @@ init
 	vars.currentKeyUsed = null;
 	vars.loadEnable = false;
 	vars.num = 0;
+
+	vars.reset = timer.CurrentPhase == TimerPhase.Running;
+}
+
+reset
+{
+	if (vars.reset)
+	{
+		vars.reset = false;
+		return true;
+	}
 }
 
 update
@@ -36,13 +42,9 @@ update
 		vars.currentKeyUsed.Update(game);
 }
 
-
 start
 {
-	if (current.horizontalHub != 0)
-	{
-		return true;
-	}
+	return current.movementDirectionX != 0;
 }
 
 split
@@ -74,7 +76,7 @@ split
 	{
 		vars.currentKeyUsed = null;
 		vars.num++;
-		vars.loadEnable = (vars.num == 1)||(vars.num == 8)||(vars.num == 14);
+		vars.loadEnable = (vars.num == 1 || vars.num == 8 || vars.num == 14);
 		return true;
 	}
 }
@@ -83,8 +85,7 @@ isLoading
 {
 	if (vars.loadEnable)
 	{
-
-	// if the char comes to a sudden stop
+		// if the char comes to a sudden stop
 		if (current.movementDirectionY == 0 && old.movementDirectionY < 0)
 		{
 			vars.loadEnable = false;
@@ -95,9 +96,4 @@ isLoading
 			return true;
 		}
 	}
-}
-
-exit
-{
-    vars.timer.Reset(); //reset on game exit
 }
