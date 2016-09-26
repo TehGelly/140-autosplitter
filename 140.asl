@@ -8,28 +8,40 @@ state("140")
 
 	int bossOne : 0x95915C, 0x13C, 0x214, 0x5C8, 0xC0, 0x24;
 	bool bossChord : 0x95915C, 0x7BC, 0x54C, 0x5E8, 0x518, 0xE4;
+
+	bool controlPaused : 0x95A788, 0x30, 0x98, 0x8, 0x14, 0xbd;
+	bool logicPaused : 0x95A788, 0x30, 0x98, 0x8, 0x14, 0xbf;
+	int levelIndex : 0x92C620;
+}
+
+startup
+{
+	vars.timerModel = new TimerModel { CurrentState = timer };
 }
 
 init
 {
-	vars.currentKeyUsed = null;
-	vars.loadEnable = false;
-	vars.num = 0;
-
-	vars.reset = timer.CurrentPhase == TimerPhase.Running;
+	vars.init = true;
 }
 
-reset
+exit
 {
-	if (vars.reset)
-	{
-		vars.reset = false;
-		return true;
-	}
+	if (timer.CurrentPhase == TimerPhase.Running
+		|| timer.CurrentPhase == TimerPhase.Paused)
+		vars.timerModel.Reset();
 }
 
 update
 {
+	if (vars.init || (current.levelIndex == 0 && current.levelIndex != old.levelIndex))
+	{
+		vars.init = false;
+		vars.currentKeyUsed = null;
+		vars.num = 0;
+		vars.loadEnable = false;
+		vars.split = false;
+	}
+
 	if (current.keyCount > 0 && current.keyPtr != 0
 		&& (current.keyPtr != old.keyPtr || vars.currentKeyUsed == null))
 	{
@@ -40,43 +52,56 @@ update
 
 	if (vars.currentKeyUsed != null)
 		vars.currentKeyUsed.Update(game);
-}
 
-start
-{
-	return current.movementDirectionX != 0;
-}
-
-split
-{
-	if(vars.num == 6)
+	if (vars.num == 6)
 	{
-		if(current.bossOne == 8)
+		if (current.bossOne == 8)
 		{
 			vars.num++;
-			return true;
+			vars.split = true;
 		}
 	}
 	else if(vars.num == 12)
 	{
-		if(old.movementDirectionY == 18 && current.movementDirectionY < 18)
+		if (old.movementDirectionY == 18 && current.movementDirectionY < 18)
 		{
 			vars.num++;
-			return true;
+			vars.split = true;
 		}
 	}
 	else if(vars.num == 18)
 	{
-		if(current.bossChord)
-		{
-			return true;
-		}
+		if (current.bossChord)
+			vars.split = true;
 	}
 	else if (vars.currentKeyUsed != null && vars.currentKeyUsed.Current && current.keyCount == 0)
 	{
 		vars.currentKeyUsed = null;
 		vars.num++;
 		vars.loadEnable = (vars.num == 1 || vars.num == 8 || vars.num == 14);
+		vars.split = true;
+	}
+}
+
+start
+{
+	return current.levelIndex == 0 && !current.logicPaused && old.logicPaused != current.logicPaused;
+}
+
+reset
+{
+	if (current.levelIndex == 0 && current.controlPaused && old.controlPaused != current.controlPaused)
+	{
+		vars.init = true;
+		return true;
+	}
+}
+
+split
+{
+	if (vars.split)
+	{
+		vars.split = false;
 		return true;
 	}
 }
